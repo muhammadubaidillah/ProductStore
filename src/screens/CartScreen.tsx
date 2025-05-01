@@ -1,10 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   View,
   Text,
   FlatList,
   StyleSheet,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Alert,
 } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
@@ -29,9 +30,11 @@ const CartScreen = () => {
     dispatch(updateQuantity({ id, quantity }));
   };
 
-  useEffect(() => {
-    console.log('cartItems: ', JSON.stringify(cartItems));
-  }, [cartItems]);
+  const handleOutsideTouch = () => {
+    if (showSummary) {
+      setShowSummary(false);
+    }
+  };
 
   const renderItem = ({ item }: any) => (
     <View style={styles.card}>
@@ -62,6 +65,12 @@ const CartScreen = () => {
 
   return (
     <View style={styles.container}>
+      {showSummary && (
+        <TouchableWithoutFeedback onPress={handleOutsideTouch}>
+          <View style={styles.overlay} />
+        </TouchableWithoutFeedback>
+      )}
+
       <FlatList
         data={cartItems}
         keyExtractor={(item) => item.id.toString()}
@@ -159,6 +168,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     elevation: 10,
+    zIndex: 2,
   },
   summaryTitle: {
     fontSize: 18,
@@ -183,6 +193,15 @@ const styles = StyleSheet.create({
   checkoutBtnText: {
     color: '#fff',
     fontSize: 16,
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    zIndex: 1,
   },
 });
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import Ionicons  from 'react-native-vector-icons/Ionicons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface Props {
   id: number;
@@ -23,7 +23,7 @@ const ProductCard: React.FC<Props> = ({
   onPress,
 }) => {
   return (
-    <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingVertical: 4 }}>
+    <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
       <TouchableOpacity style={styles.card} onPress={onPress}>
         <Image source={{ uri: thumbnail }} style={styles.image} />
         <View style={styles.info}>
@@ -55,6 +55,9 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 3,
     alignItems: 'center',
+  },
+  scrollContainer: {
+    paddingVertical: 4,
   },
   image: {
     width: 100,

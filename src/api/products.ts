@@ -1,18 +1,19 @@
 import axios from 'axios';
+import Config from 'react-native-config';
 
-const API_BASE = 'https://dummyjson.com';
+const BASE_URL = Config.BASE_URL;
 
 export const fetchCategories = async () => {
-    const response = await axios.get(`${API_BASE}/products/categories`);
+    const response = await axios.get(`${BASE_URL}/products/categories`);
     return response.data;
 };
 
 export const fetchProductsByCategory = async (category: string) => {
-    const response = await axios.get(`${API_BASE}/products/category/${category}`);
+    const response = await axios.get(`${BASE_URL}/products/category/${category}`);
     return response.data.products;
 };
 
 export const fetchProductById = async (id: number) => {
-    const response = await axios.get(`${API_BASE}/products/${id}`);
+    const response = await axios.get(`${BASE_URL}/products/${id}`);
     return response.data;
 };

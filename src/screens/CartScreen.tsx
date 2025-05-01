@@ -67,7 +67,7 @@ const CartScreen = () => {
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
         ListEmptyComponent={<Text style={styles.empty}>Your cart is empty.</Text>}
-        contentContainerStyle={{ paddingBottom: 100 }}
+        contentContainerStyle={styles.containerStyle}
       />
 
       {cartItems.length > 0 && (
@@ -101,6 +101,9 @@ const CartScreen = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  containerStyle: {
+    paddingBottom: 100,
+  },
   card: {
     padding: 16,
     borderBottomWidth: 1,

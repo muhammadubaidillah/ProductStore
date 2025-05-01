@@ -78,8 +78,8 @@ const HomeScreen = () => {
         <FlatList
           data={products}
           keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={{ paddingBottom: 16 }}
-          ListFooterComponent={<View style={{ height: 48 }} />}
+          contentContainerStyle={styles.containerStyle}
+          ListFooterComponent={<View style={styles.footerComponent} />}
           renderItem={({ item }) => (
             <ProductCard
               id={item.id}
@@ -106,6 +106,12 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   loader: {
     marginTop: 32,
+  },
+  containerStyle: {
+    paddingBottom: 16,
+  },
+  footerComponent: {
+    height: 48,
   },
 });
 

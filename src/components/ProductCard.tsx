@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import Ionicons  from 'react-native-vector-icons/Ionicons';
 
 interface Props {
@@ -23,19 +23,21 @@ const ProductCard: React.FC<Props> = ({
   onPress,
 }) => {
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress}>
-      <Image source={{ uri: thumbnail }} style={styles.image} />
-      <View style={styles.info}>
-        <View style={styles.header}>
-          <Text style={styles.title}>{title}</Text>
-          <TouchableOpacity onPress={onToggleFavorite}>
-            <Ionicons name={isFavorite ? 'heart' : 'heart-outline'} size={20} color="#ff4d4d" />
-          </TouchableOpacity>
+    <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingVertical: 4 }}>
+      <TouchableOpacity style={styles.card} onPress={onPress}>
+        <Image source={{ uri: thumbnail }} style={styles.image} />
+        <View style={styles.info}>
+          <View style={styles.header}>
+            <Text style={styles.title}>{title}</Text>
+            <TouchableOpacity onPress={onToggleFavorite}>
+              <Ionicons name={isFavorite ? 'heart' : 'heart-outline'} size={20} color="#ff4d4d" />
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.desc} numberOfLines={2}>{description}</Text>
+          <Text style={styles.price}>${price}</Text>
         </View>
-        <Text style={styles.desc} numberOfLines={2}>{description}</Text>
-        <Text style={styles.price}>${price}</Text>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </ScrollView>
   );
 };
 

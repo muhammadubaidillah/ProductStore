@@ -16,8 +16,8 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const AppNavigator = () => (
   <NavigationContainer>
     <Stack.Navigator initialRouteName="Home">
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
+      <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Catalog' }} />
+      <Stack.Screen name="ProductDetail" component={ProductDetailScreen} options={{ title: 'Product Details' }} />
       <Stack.Screen name="Cart" component={CartScreen} />
     </Stack.Navigator>
   </NavigationContainer>

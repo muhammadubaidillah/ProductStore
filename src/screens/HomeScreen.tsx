@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect } from 'react';
-import { View, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { View, FlatList, ActivityIndicator, StyleSheet, RefreshControl, ScrollView } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {
   loadCategories,
@@ -12,6 +12,9 @@ import ProductCard from '../components/ProductCard';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import HeaderCartButton from '../components/CartButton';
+
+const renderHeaderCartButton = () => <HeaderCartButton />;
 
 const HomeScreen = () => {
   const dispatch = useAppDispatch();
@@ -19,6 +22,8 @@ const HomeScreen = () => {
 
   const { categories, products, selectedCategory, loading } = useAppSelector((state) => state.products);
   const favoriteIds = useAppSelector((state) => state.favorites.items);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const scrollViewRef = useRef<ScrollView | null>((null));
 
   const handleCategorySelect = useCallback((category: string) => {
     dispatch(setCategory(category));
@@ -27,6 +32,20 @@ const HomeScreen = () => {
   const handleProductPress = (productId: number) => {
     navigation.navigate('ProductDetail', { productId });
   };
+
+  const onRefresh = () => {
+    setIsRefreshing(true);
+    dispatch(loadCategories()).then(() => {
+      setIsRefreshing(false);
+      scrollViewRef.current?.scrollTo({ x: 0, animated: true });
+    });
+  };
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: renderHeaderCartButton,
+    });
+  }, [navigation]);
 
   useEffect(() => {
     dispatch(loadCategories());
@@ -50,6 +69,7 @@ const HomeScreen = () => {
         categories={categories}
         selected={selectedCategory}
         onSelect={handleCategorySelect}
+        scrollViewRef={scrollViewRef}
       />
 
       {loading ? (
@@ -59,6 +79,7 @@ const HomeScreen = () => {
           data={products}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={{ paddingBottom: 16 }}
+          ListFooterComponent={<View style={{ height: 48 }} />}
           renderItem={({ item }) => (
             <ProductCard
               id={item.id}
@@ -71,6 +92,11 @@ const HomeScreen = () => {
               onPress={() => handleProductPress(item.id)}
             />
           )}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={onRefresh} />
+          }
         />
       )}
     </View>

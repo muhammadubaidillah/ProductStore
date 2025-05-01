@@ -1,21 +1,22 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { createNativeStackNavigator, NativeStackNavigationProp  } from '@react-navigation/native-stack';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { toggleFavorite } from '../redux/favoritesSlice';
 import { addToCart } from '../redux/cartSlice';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { CartItem } from '../types/cartItem';
+import HeaderCartButton from '../components/CartButton';
 
 type DetailRouteProp = RouteProp<RootStackParamList, 'ProductDetail'>;
 
-type CartNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Cart'>;
+const renderHeaderCartButton = () => <HeaderCartButton />;
 
 const ProductDetailScreen = () => {
   const { params } = useRoute<DetailRouteProp>();
-  const navigation = useNavigation<CartNavigationProp>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const dispatch = useAppDispatch();
 
   const product = useAppSelector((state) =>
@@ -26,9 +27,11 @@ const ProductDetailScreen = () => {
     state.favorites.items.includes(params.productId)
   );
 
-  const handleCartNavigate = () => {
-    navigation.navigate('Cart');
-  };
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: renderHeaderCartButton,
+    });
+  }, [navigation]);
 
   if (!product) {
     return (
@@ -53,12 +56,12 @@ const ProductDetailScreen = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Image source={{ uri: product.thumbnail }} style={styles.image} />
+      <Image source={{ uri: product.thumbnail }} style={styles.imageContainer} resizeMode="contain" />
       <View style={styles.info}>
         <View style={styles.header}>
           <Text style={styles.title}>{product.title}</Text>
           <TouchableOpacity onPress={() => dispatch(toggleFavorite(product.id))}>
-          {/* <TouchableOpacity onPress={() => handleCartNavigate()}> */}
+            {/* <TouchableOpacity onPress={() => handleCartNavigate()}> */}
             <Icon
               name={isFavorite ? 'heart' : 'heart-outline'}
               size={24}
@@ -81,6 +84,13 @@ const ProductDetailScreen = () => {
 const styles = StyleSheet.create({
   container: {
     paddingBottom: 20,
+  },
+  imageContainer: {
+    width: '100%',
+    height: 250,
+    backgroundColor: 'white', // Set background color to white
+    justifyContent: 'center', // Optional: center the image vertically
+    alignItems: 'center', // Optional: center the image horizontally
   },
   image: {
     width: '100%',

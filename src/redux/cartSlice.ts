@@ -10,10 +10,12 @@ interface CartItem {
 
 interface CartState {
     items: CartItem[];
+    totalQuantity: number;
 }
 
 const initialState: CartState = {
     items: [],
+    totalQuantity: 0,
 };
 
 const cartSlice = createSlice({
@@ -21,14 +23,13 @@ const cartSlice = createSlice({
     initialState,
     reducers: {
         addToCart(state, action: PayloadAction<CartItem>) {
-            console.log('addToCart action: ', JSON.stringify(action.payload));
-            console.log('addToCart state: ', JSON.stringify(state.items));
             const existing = state.items.find(item => item.id === action.payload.id);
             if (existing) {
                 existing.quantity += action.payload.quantity;
             } else {
                 state.items.push(action.payload);
             }
+            state.totalQuantity = state.items.reduce((total, item) => total + item.quantity, 0);
         },
         updateQuantity(state, action: PayloadAction<{ id: number; quantity: number }>) {
             const item = state.items.find(i => i.id === action.payload.id);

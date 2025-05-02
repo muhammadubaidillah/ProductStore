@@ -17,3 +17,8 @@ export const fetchProductById = async (id: number) => {
     const response = await axios.get(`${BASE_URL}/products/${id}`);
     return response.data;
 };
+
+export async function fetchProductsByQuery(query: string) {
+    const response = await axios.get(`${BASE_URL}/products/search?q=${encodeURIComponent(query)}`);
+    return response.data.products;
+  }

@@ -5,16 +5,19 @@ import {
   loadCategories,
   loadProductsByCategory,
   setCategory,
+  clearProducts,
 } from '../redux/productsSlice';
 import { toggleFavorite } from '../redux/favoritesSlice';
-import CategoryTabs from '../components/CategoryTabs';
-import ProductCard from '../components/ProductCard';
+import CategoryTabs from '../components/categoryTabs';
+import ProductCard from '../components/productCard';
 import { useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../navigation/AppNavigator';
+import { RootStackParamList } from '../navigation/appNavigator';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import HeaderCartButton from '../components/CartButton';
+import HeaderRightButtons from '../components/headerRightButton';
 
-const renderHeaderCartButton = () => <HeaderCartButton />;
+const createHeaderRight = (onSearchPress: () => void) => () => (
+  <HeaderRightButtons onSearchPress={onSearchPress} />
+);
 
 const HomeScreen = () => {
   const dispatch = useAppDispatch();
@@ -43,9 +46,12 @@ const HomeScreen = () => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: renderHeaderCartButton,
+      headerRight: createHeaderRight(() => {
+        dispatch(clearProducts());
+        navigation.navigate('Search');
+      }),
     });
-  }, [navigation]);
+  }, [navigation, dispatch]);
 
   useEffect(() => {
     dispatch(loadCategories());

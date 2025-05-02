@@ -2,13 +2,13 @@ import React, { useLayoutEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../navigation/AppNavigator';
+import { RootStackParamList } from '../navigation/appNavigator';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { toggleFavorite } from '../redux/favoritesSlice';
 import { addToCart } from '../redux/cartSlice';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { CartItem } from '../types/cartItem';
-import HeaderCartButton from '../components/CartButton';
+import HeaderCartButton from '../components/headerCartButton';
 
 type DetailRouteProp = RouteProp<RootStackParamList, 'ProductDetail'>;
 
@@ -61,7 +61,6 @@ const ProductDetailScreen = () => {
         <View style={styles.header}>
           <Text style={styles.title}>{product.title}</Text>
           <TouchableOpacity onPress={() => dispatch(toggleFavorite(product.id))}>
-            {/* <TouchableOpacity onPress={() => handleCartNavigate()}> */}
             <Icon
               name={isFavorite ? 'heart' : 'heart-outline'}
               size={24}

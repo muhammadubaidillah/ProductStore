@@ -2,7 +2,7 @@ import React from 'react';
 import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import AppNavigator from './navigation/AppNavigator';  // Make sure this path is correct
+import AppNavigator from './navigation/appNavigator';
 import { store, persistor } from './redux/store';
 
 const App = () => {

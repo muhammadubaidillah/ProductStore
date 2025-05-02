@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { View, FlatList, ActivityIndicator, StyleSheet, RefreshControl, ScrollView } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {
   loadCategories,
@@ -14,6 +15,7 @@ import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/appNavigator';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import HeaderRightButtons from '../components/headerRightButton';
+import { measureFCP } from '../utils/metrics';
 
 const createHeaderRight = (onSearchPress: () => void) => () => (
   <HeaderRightButtons onSearchPress={onSearchPress} />
@@ -58,16 +60,27 @@ const HomeScreen = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (selectedCategory) {
-      dispatch(loadProductsByCategory(selectedCategory));
-    }
-  }, [dispatch, selectedCategory]);
-
-  useEffect(() => {
     if (categories.length > 0) {
       handleCategorySelect(categories[0].slug);
     }
   }, [categories, handleCategorySelect]);
+
+  useEffect(() => {
+    const trackFCP = async () => {
+      await measureFCP();
+    };
+
+    trackFCP();
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (selectedCategory) {
+        dispatch(clearProducts());
+        dispatch(loadProductsByCategory(selectedCategory));
+      }
+    }, [dispatch, selectedCategory])
+  );
 
   return (
     <View>

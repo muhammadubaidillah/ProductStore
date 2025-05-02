@@ -1,24 +1,44 @@
-import axios from 'axios';
 import Config from 'react-native-config';
+import { loadUrlsWithTTFB } from '../utils/metrics';
 
 const BASE_URL = Config.BASE_URL;
 
 export const fetchCategories = async () => {
-    const response = await axios.get(`${BASE_URL}/products/categories`);
-    return response.data;
+    const result = await loadUrlsWithTTFB(`${BASE_URL}/products/categories`);
+
+    if (result !== -1) {
+        return result.data;
+    }
+
+    return [];
 };
 
 export const fetchProductsByCategory = async (category: string) => {
-    const response = await axios.get(`${BASE_URL}/products/category/${category}`);
-    return response.data.products;
+    const result = await loadUrlsWithTTFB(`${BASE_URL}/products/category/${category}`);
+
+    if (result !== -1) {
+        return result.data.products;
+    }
+
+    return [];
 };
 
 export const fetchProductById = async (id: number) => {
-    const response = await axios.get(`${BASE_URL}/products/${id}`);
-    return response.data;
+    const result = await loadUrlsWithTTFB(`${BASE_URL}/products/${id}`);
+
+    if (result !== -1) {
+        return result.data.products;
+    }
+
+    return [];
 };
 
 export async function fetchProductsByQuery(query: string) {
-    const response = await axios.get(`${BASE_URL}/products/search?q=${encodeURIComponent(query)}`);
-    return response.data.products;
-  }
+    const result = await loadUrlsWithTTFB(`${BASE_URL}/products/search?q=${encodeURIComponent(query)}`);
+
+    if (result !== -1) {
+        return result.data.products;
+    }
+
+    return [];
+}

@@ -4,8 +4,18 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import AppNavigator from './navigation/appNavigator';
 import { store, persistor } from './redux/store';
+import { useEffect } from 'react';
+import { measureTTI } from './utils/metrics';
 
 const App = () => {
+  useEffect(() => {
+    const trackTTI = async () => {
+      await measureTTI();
+    };
+
+    trackTTI();
+  }, []);
+
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

@@ -17,6 +17,7 @@ const HeaderSearchBar: React.FC<HeaderSearchBarProps> = ({ value, onChange, onSu
       onChangeText={onChange}
       returnKeyType="search"
       onSubmitEditing={onSubmit}
+      placeholderTextColor="#333"
       autoFocus
     />
   );

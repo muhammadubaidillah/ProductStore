@@ -26,7 +26,7 @@ const HeaderCartButton: React.FC = () => {
 
 const styles = StyleSheet.create({
     button: {
-        marginRight: 16,
+        marginRight: 12,
         padding: 2,
     },
     badge: {

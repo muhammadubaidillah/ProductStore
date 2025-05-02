@@ -6,6 +6,8 @@ import { loadProductsByQuery } from '../redux/productsSlice';
 import HeaderSearchBar from '../components/headerSearchBar';
 import ProductCard from '../components/productCard';
 import { toggleFavorite } from '../redux/favoritesSlice';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation/appNavigator';
 
 const createSearchHeader = (
     value: string,
@@ -16,7 +18,7 @@ const createSearchHeader = (
 );
 
 const SearchScreen = () => {
-    const navigation = useNavigation();
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const dispatch = useAppDispatch();
     const { products, loading } = useAppSelector((state) => state.products);
     const favoriteIds = useAppSelector((state) => state.favorites.items);
@@ -30,13 +32,16 @@ const SearchScreen = () => {
         }
     }, [dispatch, query]);
 
+    const handleProductPress = (productId: number) => {
+        navigation.navigate('ProductDetail', { productId });
+      };
+
     useLayoutEffect(() => {
         navigation.setOptions({
             headerTitle: createSearchHeader(query, setQuery, onSearchSubmit),
         });
     }, [navigation, query, onSearchSubmit]);
 
-    // 🔁 Auto-submit 2s after typing stops
     useEffect(() => {
         if (debounceTimer.current) { clearTimeout(debounceTimer.current); }
 
@@ -70,7 +75,7 @@ const SearchScreen = () => {
                             thumbnail={item.thumbnail}
                             isFavorite={favoriteIds.includes(item.id)}
                             onToggleFavorite={() => dispatch(toggleFavorite(item.id))}
-                            onPress={() => { }}
+                            onPress={() => handleProductPress(item.id)}
                         />
                     )}
                 />

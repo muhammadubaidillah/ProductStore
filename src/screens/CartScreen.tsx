@@ -9,10 +9,14 @@ import {
   Alert,
 } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { removeFromCart, updateQuantity } from '../redux/cartSlice';
+import { clearCart, removeFromCart, updateQuantity } from '../redux/cartSlice';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation/appNavigator';
 
 const CartScreen = () => {
   const dispatch = useAppDispatch();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const cartItems = useAppSelector((state) => state.cart.items);
 
   const [showSummary, setShowSummary] = useState(false);
@@ -34,6 +38,26 @@ const CartScreen = () => {
     if (showSummary) {
       setShowSummary(false);
     }
+  };
+
+  const handleCheckout = () => {
+    Alert.alert(
+      'Checkout',
+      'Thank you for your purchase!',
+      [
+        {
+          text: 'OK',
+          onPress: () => {
+            dispatch(clearCart());
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Home' }],
+            });
+          },
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   const renderItem = ({ item }: any) => (
@@ -98,7 +122,7 @@ const CartScreen = () => {
           <Text style={styles.total}>Total: ${total.toFixed(2)}</Text>
           <TouchableOpacity
             style={styles.checkoutBtn}
-            onPress={() => Alert.alert('Checkout', 'Thank you for your purchase!')}
+            onPress={handleCheckout}
           >
             <Text style={styles.checkoutBtnText}>Checkout</Text>
           </TouchableOpacity>
